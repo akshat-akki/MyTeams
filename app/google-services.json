@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "163387538881",
+    "project_id": "engageteams-f807a",
+    "storage_bucket": "engageteams-f807a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163387538881:android:494b373541611a46c00340",
+        "android_client_info": {
+          "package_name": "com.example.engageteams"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163387538881-n43714oam4n6dr0fnl398i9b7aic4jdh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.engageteams",
+            "certificate_hash": "e944f96f655e8807a69f773f82bb29b53f6ea50a"
+          }
+        },
+        {
+          "client_id": "163387538881-piiaipvan3gg9l27t3r3p4npfves9o96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9AEHECLWAxMlMmyUXmTdR-gsJKS44Vg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163387538881-piiaipvan3gg9l27t3r3p4npfves9o96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
