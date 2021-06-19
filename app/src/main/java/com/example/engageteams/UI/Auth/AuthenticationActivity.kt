@@ -10,7 +10,8 @@ import android.widget.ProgressBar
 import com.example.engageteams.DAO.UserDao
 import com.example.engageteams.Models.User
 import com.example.engageteams.R
-import com.example.engageteams.UI.MainActivity
+import com.example.engageteams.UI.MeetRooms.MeetNow
+import com.example.engageteams.UI.MeetRooms.WaitingRoom
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -123,7 +124,7 @@ class AuthenticationActivity : AppCompatActivity() {
             val usersDao = UserDao()
             usersDao.addUser(user)
 
-            val mainActivityIntent = Intent(this, MainActivity::class.java)// Calling the Main Activity
+            val mainActivityIntent = Intent(this, WaitingRoom::class.java)// Calling the Main Activity
             startActivity(mainActivityIntent)
             finish()
         } else {
