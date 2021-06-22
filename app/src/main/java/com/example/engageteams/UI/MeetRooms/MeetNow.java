@@ -7,20 +7,25 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.engageteams.R;
 import com.facebook.react.modules.core.PermissionListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 
 import org.jitsi.meet.sdk.BroadcastEvent;
 import org.jitsi.meet.sdk.BroadcastIntentHelper;
@@ -39,7 +44,7 @@ import timber.log.Timber;
 
  public  class MeetNow extends FragmentActivity implements JitsiMeetActivityInterface {
         private JitsiMeetView view;
-
+        String room_name;
         private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -68,8 +73,7 @@ import timber.log.Timber;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_meet_now);
             Intent i=getIntent();
-            String room_name=i.getStringExtra("Meet_ID");
-
+             room_name=i.getStringExtra("Meet_ID");
 
             view = new JitsiMeetView(MeetNow.this);
            FrameLayout videoView = (FrameLayout) findViewById(R.id.videoview);
@@ -85,27 +89,7 @@ import timber.log.Timber;
                 e.printStackTrace();
             }
             view.join(options);
-
             videoView.addView(view);
-
-            //  Initialize default options for Jitsi Meet conferences.
-//            URL serverURL;
-//            try {
-//                // When using JaaS, replace "https://meet.jit.si" with the proper serverURL
-//                serverURL = new URL("https://meet.jit.si");
-//            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-//                throw new RuntimeException("Invalid server URL!");
-//            }
-//            JitsiMeetConferenceOptions defaultOptions
-//                    = new JitsiMeetConferenceOptions.Builder()
-//                    .setServerURL(serverURL)
-//                    .setFeatureFlag("invite.enabled",true)
-//                    .setFeatureFlag("" , "need to pass date to jitsi-meet")
-//                    .setWelcomePageEnabled(false)
-//                    .build();
-//            JitsiMeet.setDefaultConferenceOptions(defaultOptions);
-
             registerForBroadcastMessages();
         }
 
@@ -131,25 +115,8 @@ import timber.log.Timber;
              final int[] grantResults) {
          JitsiMeetActivityDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
      }
-     public void onButtonClick(View v) {
-//            EditText editText = findViewById(R.id.editText);
-//            String text = editText.getText().toString();
-//
-//
-//            if (text.length() > 0) {
-//                //Build options object for joining the conference. The SDK will merge the default
-//                //one we set earlier and this one when joining.
-//                JitsiMeetConferenceOptions options
-//                        = new JitsiMeetConferenceOptions.Builder()
-//                        .setRoom(text)
-//                        .setFeatureFlag("invite.enabled",true)
-//                        .setFeatureFlag("invite-url-custom" , "need to pass date to jitsi-meet")
-//                        .setWelcomePageEnabled(false)
-//                        .build();
-
-                // Launch the new activity with the given options. The launch() method takes care
-                //of creating the required Intent and passing the options.
-                //    JitsiMeetActivity.launch(this, options);
+     public void onInviteClick(View v) {
+             createinvitelinks();
             }
 
 
@@ -183,6 +150,7 @@ import timber.log.Timber;
                         Timber.i("Participant joined%s", event.getData().get("name"));
                         break;
 
+
                 }
             }
         }
@@ -198,15 +166,47 @@ import timber.log.Timber;
 
         private void createinvitelinks()
         {
-            DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLink(Uri.parse("https://www.myteams.com/"))
-                    .setDomainUriPrefix("https://myteams.page.link")
-                  /*  .setAndroidParameters(
-                            new DynamicLink.AndroidParameters.Builder("com.example.engageteams")
-                                    .setMinimumVersion(125)*/
+            Log.d("domain","click");
+//            DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+//                    .setLink(Uri.parse("https://www.example.com/"))
+//                    .setDomainUriPrefix("https://teamsmy.page.link")
+//
+//                    .setAndroidParameters(
+//                            new DynamicLink.AndroidParameters.Builder("com.example.engageteams")
+//                                    .build())
+//
+//                    .buildDynamicLink();
+//            Uri dynamicLinkUri = dynamicLink.getUri();
+//            Log.d("domain",dynamicLinkUri.toString());
+            String sharelinktext  = "https://teamsmy.page.link/?"+
+                    "link=https://www.example.com/?meetid="+room_name+"%"+
+                    "&apn="+ getPackageName()+
+                    "&st="+"My Teams"+
+                    "&sd="+"INVITE LINK!!";
 
-                    .buildDynamicLink();
-            Uri dynamicLinkUri = dynamicLink.getUri();
+            Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLongLink(Uri.parse(sharelinktext))  // manually
+                    .buildShortDynamicLink()
+                    .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+                        @Override
+                        public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                            if (task.isSuccessful()) {
+                                // Short link created
+                                Uri shortLink = task.getResult().getShortLink();
+                                Uri flowchartLink = task.getResult().getPreviewLink();
+                                Log.e("main ", "short link "+ shortLink.toString());
+                                // share app dialog
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_SEND);
+                                intent.putExtra(Intent.EXTRA_TEXT,  shortLink.toString());
+                                intent.setType("text/plain");
+                                startActivity(intent);
+                            } else {
+                                Log.e("main", " error "+task.getException() );
+                            }
+                        }
+                    });
+
         }
 
 

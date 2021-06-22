@@ -55,16 +55,16 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
+    implementation 'com.google.firebase:firebase-dynamic-links:20.1.0'
     def camerax_version = "1.0.0"
-// CameraX core library using camera2 implementation
+    // CameraX core library using camera2 implementation
     implementation "androidx.camera:camera-camera2:$camerax_version"
-// CameraX Lifecycle Library
+     // CameraX Lifecycle Library
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
-// CameraX View class
+     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha24"
     // Java language implementation
-    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+    implementation 'com.google.firebase:firebase-dynamic-links:17.0.0'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"

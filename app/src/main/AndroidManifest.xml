@@ -22,17 +22,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EngageTeams">
-        <activity android:name=".UI.MeetRooms.WaitingRoom"></activity>
+        <activity android:name=".UI.MeetRooms.WaitingRoom">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="teamsmy.page.link"
+                    android:scheme="https"/>
+            </intent-filter>
+        </activity>
 
         <activity android:name=".UI.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".UI.Auth.AuthenticationActivity" />
         <activity android:name=".UI.MainActivity" />
+
         <activity android:name=".UI.MeetRooms.MeetNow" />
     </application>
 
