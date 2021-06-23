@@ -21,6 +21,10 @@ allprojects {
         jcenter()
         maven {
             url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
+            maven { url 'https://jitpack.io' }
+            maven { url "https://chatsdk.jfrog.io/artifactory/release/chat-sdk-android" }
+            maven { url "https://chatsdk.jfrog.io/artifactory/release/chatkit" }
+            maven { url "https://chatsdk.jfrog.io/artifactory/release/matisse" }
         }
     }
 }

@@ -22,6 +22,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigation = findViewById(R.id.bottom_navigation);
+        BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.navigation_Teams:
+                                openFragment(TeamsFragment.newInstance("", ""));
+                                return true;
+                            case R.id.navigation_MeetNow:
+                                Intent i=new Intent(getApplicationContext(), WaitingRoom.class);
+                                startActivity(i);
+                                return true;
+                        }
+                        return false;
+                    }
+                };
 
     }
     public void openFragment(Fragment fragment) {
@@ -30,19 +45,5 @@ public class MainActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
-    BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.navigation_Teams:
-                            openFragment(TeamsFragment.newInstance("", ""));
-                            return true;
-                        case R.id.navigation_MeetNow:
-                           Intent i=new Intent(getApplicationContext(), WaitingRoom.class);
-                           startActivity(i);
-                            return true;
-                    }
-                    return false;
-                }
-            };
+
 }
