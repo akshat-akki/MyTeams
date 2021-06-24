@@ -14,6 +14,9 @@ import com.example.engageteams.R;
 import com.example.engageteams.UI.MeetRooms.WaitingRoom;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import sdk.chat.core.session.ChatSDK;
+import sdk.chat.ui.ChatSDKUI;
+
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigation;
 
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         bottomNavigation = findViewById(R.id.bottom_navigation);
         BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
