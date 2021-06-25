@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.engageteams.DAO.UserDao
 import com.example.engageteams.Models.User
 import com.example.engageteams.R
+import com.example.engageteams.UI.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -132,10 +133,10 @@ class AuthenticationActivity : AppCompatActivity() {
             usersDao.addUser(user)
             val details:AccountDetails = AccountDetails.username(user.email,"")
             ChatSDK.auth().authenticate(details).subscribe()
-            ChatSDK.ui().startMainActivity(this)
-//            val mainActivityIntent = Intent(this, MainActivity::class.java)// Calling the Main Activity
-//            startActivity(mainActivityIntent)
-//            finish()
+
+            val mainActivityIntent = Intent(this, MainActivity::class.java)// Calling the Main Activity
+            startActivity(mainActivityIntent)
+            finish()
         } else {
             signInButton.visibility = View.VISIBLE
             progressBar.visibility = View.GONE

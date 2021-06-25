@@ -3,6 +3,8 @@ package com.example.engageteams.UI;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,24 +28,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        bottomNavigation = findViewById(R.id.bottom_navigation);
-        BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.navigation_Teams:
-                                openFragment(TeamsFragment.newInstance("", ""));
-                                return true;
-                            case R.id.navigation_MeetNow:
-                                Intent i=new Intent(getApplicationContext(), WaitingRoom.class);
-                                startActivity(i);
-                                return true;
-                        }
-                        return false;
-                    }
-                };
+        Button meetnowbtn=findViewById(R.id.MeetNowBtn);
+        Button teamsbtn=findViewById(R.id.TeamsBtn);
+        Button morebtn=findViewById(R.id.MoreBtn);
+        meetnowbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getApplicationContext(), WaitingRoom.class);
+                startActivity(i);
+
+            }
+        });
+
+        teamsbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent intent=new Intent(this,ChatSDK.ui().getMainActivity().class);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                ChatSDK.ui().startMainActivity(MainActivity.this);
+            }
+        });
 
     }
+
+
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);

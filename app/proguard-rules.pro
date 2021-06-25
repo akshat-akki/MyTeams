@@ -13,6 +13,8 @@
 
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
+
+
 -keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
 -keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
@@ -76,6 +78,7 @@
 -keep class com.facebook.react.bridge.ReadableType { *; }
 -keep class com.facebook.react.bridge.queue.NativeRunnable { *; }
 -keep class com.facebook.react.devsupport.** { *; }
+-keep class com.herewhite.* { *; }
 
 -dontwarn com.facebook.react.devsupport.**
 -dontwarn com.google.appengine.**
