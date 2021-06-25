@@ -23,7 +23,7 @@ public class MainApp extends Application {
         super.onCreate();
         try {
             ChatSDK.builder()
-                    .setGoogleMaps("Your Google Static Maps API key")
+                    .setGoogleMaps("akki")
                     .setPublicChatRoomLifetimeMinutes(TimeUnit.HOURS.toMinutes(24))
                     .build()
 
