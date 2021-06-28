@@ -8,13 +8,13 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <uses-feature android:name="android.hardware.camera.any" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -27,7 +27,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EngageTeams">
-        <activity android:name=".UI.WhiteBoard"></activity>
+        <activity android:name=".UI.CalenderActivity">
+            <intent-filter>
+<!--                <action android:name="android.intent.action.INSERT" /><data android:mimeType="vnd.android.cursor.dir/event" />-->
+                <category android:name="android.intent.category.DEFAULT" />
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+            </intent-filter>
+        </activity>
+        <activity android:name=".UI.WhiteBoardActivity" />
         <activity android:name=".UI.MeetRooms.WaitingRoom">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -108,6 +108,7 @@ import timber.log.Timber;
 
          JitsiMeetActivityDelegate.onNewIntent(intent);
      }
+     @SuppressLint("MissingSuperCall")
      @Override
      public void onRequestPermissionsResult(
              final int requestCode,
@@ -164,20 +165,9 @@ import timber.log.Timber;
 
 
 
-        private void createinvitelinks()
+        public void createinvitelinks()
         {
             Log.d("domain","click");
-//            DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-//                    .setLink(Uri.parse("https://www.example.com/"))
-//                    .setDomainUriPrefix("https://teamsmy.page.link")
-//
-//                    .setAndroidParameters(
-//                            new DynamicLink.AndroidParameters.Builder("com.example.engageteams")
-//                                    .build())
-//
-//                    .buildDynamicLink();
-//            Uri dynamicLinkUri = dynamicLink.getUri();
-//            Log.d("domain",dynamicLinkUri.toString());
             String sharelinktext  = "https://teamsmy.page.link/?"+
                     "link=https://www.example.com/?meetid="+room_name+"%"+
                     "&apn="+ getPackageName()+

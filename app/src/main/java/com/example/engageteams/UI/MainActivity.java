@@ -48,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
                 ChatSDK.ui().startMainActivity(MainActivity.this);
             }
         });
+        morebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getApplicationContext(), CalenderActivity.class);
+                startActivity(i);
+            }
+        });
 
     }
 
