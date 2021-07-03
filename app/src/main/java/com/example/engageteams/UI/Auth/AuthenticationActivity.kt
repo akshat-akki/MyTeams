@@ -1,7 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.engageteams.UI.Auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -21,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,7 +33,6 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import sdk.chat.core.session.ChatSDK
 import sdk.chat.core.types.AccountDetails
-import sdk.chat.firebase.adapter.FirebaseCoreHandler.database
 
 class AuthenticationActivity : AppCompatActivity() {
 
@@ -41,7 +43,7 @@ class AuthenticationActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var signInButton: Button
     private lateinit var progressBar:ProgressBar
-
+    private lateinit var image_url:String;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,9 +114,8 @@ class AuthenticationActivity : AppCompatActivity() {
            val auth=auth.signInWithCredential(credential).await();
             val firebaseUser=auth.user
             withContext(Dispatchers.Main){
-                val details:AccountDetails = AccountDetails.signUp(firebaseUser?.email.toString(), "")
-
                 updateUI(firebaseUser)
+
             }
         }
     }// [END auth_with_google]
@@ -126,17 +127,24 @@ class AuthenticationActivity : AppCompatActivity() {
             val user = User(
                 firebaseUser.email.toString(),
                 firebaseUser.uid,
-                firebaseUser.displayName,
+                firebaseUser.phoneNumber.toString(),
+                firebaseUser.displayName.toString(),
                 firebaseUser.photoUrl.toString()
             )
             val usersDao = UserDao()
             usersDao.addUser(user)
+            image_url=user.imageUrl;
             val details:AccountDetails = AccountDetails.username(user.email,"")
             ChatSDK.auth().authenticate(details).subscribe()
+            val delay = 4000 //delay period of  4 seconds
+            Handler(Looper.getMainLooper()).postDelayed({
+                val mainActivityIntent = Intent(this, MainActivity::class.java)
+                mainActivityIntent.putExtra("Profile_pic_URL",image_url);
+                startActivity(mainActivityIntent)
+                finish()
 
-            val mainActivityIntent = Intent(this, MainActivity::class.java)// Calling the Main Activity
-            startActivity(mainActivityIntent)
-            finish()
+            }, delay.toLong())
+
         } else {
             signInButton.visibility = View.VISIBLE
             progressBar.visibility = View.GONE

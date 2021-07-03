@@ -30,7 +30,7 @@
 
                 android:layout_marginEnd="50dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/round_button"
+
                 android:foreground="@android:drawable/ic_btn_speak_now"
                 android:foregroundGravity="center"
                 android:foregroundTint="@color/white"></Button>
@@ -42,7 +42,6 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginStart="50dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/round_button"
                 android:foreground="@android:drawable/ic_menu_camera"
                 android:foregroundGravity="center"
                 android:foregroundTintMode="add"

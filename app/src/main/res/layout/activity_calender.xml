@@ -3,13 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.CalenderActivity">
-
-
+    tools:context=".UI.CalenderActivity"
+    android:background="@drawable/calender_background">
+    <CalendarView
+        android:id="@+id/calender_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:dateTextAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:theme="@style/CalenderViewCustom"
+        android:weekDayTextAppearance="@style/TextAppearance.AppCompat.Body2">
+    </CalendarView>
     <Button
-        android:id="@+id/addeventbtn"
+        android:id="@+id/submitbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        android:background="@drawable/submit_btn" />
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:layout_centerInParent="true"/>
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/calender_view"
+        android:layout_marginBottom="25dp"
+        android:text="Pick a Date to schedule the Meet!!" />
 </RelativeLayout>

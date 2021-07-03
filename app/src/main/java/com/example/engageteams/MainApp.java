@@ -45,6 +45,7 @@ public class MainApp extends Application {
 
                     // Add the UI module
                     .addModule(UIModule.builder()
+                            .setTheme(R.style.CustomChatSDKTheme)
                             .setPublicRoomCreationEnabled(true)
                             .setPublicRoomsEnabled(true)
                             .setAllowBackPressFromMainActivity(true)

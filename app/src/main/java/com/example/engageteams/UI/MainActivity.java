@@ -2,35 +2,50 @@ package com.example.engageteams.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.engageteams.Fragments.TeamsFragment;
+import com.bumptech.glide.Glide;
+import com.example.engageteams.DAO.UserDao;
+import com.example.engageteams.Models.User;
 import com.example.engageteams.R;
 import com.example.engageteams.UI.MeetRooms.WaitingRoom;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import sdk.chat.core.session.ChatSDK;
-import sdk.chat.ui.ChatSDKUI;
 
 public class MainActivity extends AppCompatActivity {
-    BottomNavigationView bottomNavigation;
 
+    TextView name;
+    TextView email;
+    TextView phone;
+    ImageView profilepic;
+    String image_url;
+    FirebaseAuth auth=FirebaseAuth.getInstance();
+    FirebaseUser currentUser=auth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        Button meetnowbtn=findViewById(R.id.MeetNowBtn);
-        Button teamsbtn=findViewById(R.id.TeamsBtn);
-        Button morebtn=findViewById(R.id.MoreBtn);
+        Intent i=getIntent();
+        image_url=i.getStringExtra("Profile_pic_URL");
+        name=findViewById(R.id.name);
+        email=findViewById(R.id.email);
+        phone=findViewById(R.id.phone);
+        profilepic=findViewById(R.id.profile_image);
+        updateDashboardUI();
+        Button meetnowbtn=findViewById(R.id.Meet_Now_btn);
+        Button teamsbtn=findViewById(R.id.Teams_btn);
+        Button schedulemeetbtn=findViewById(R.id.schedule_meet_btn);
+        Button whiteboardbtn=findViewById(R.id.white_board_btn);
         meetnowbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,22 +63,50 @@ public class MainActivity extends AppCompatActivity {
                 ChatSDK.ui().startMainActivity(MainActivity.this);
             }
         });
-        morebtn.setOnClickListener(new View.OnClickListener() {
+        schedulemeetbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(getApplicationContext(), CalenderActivity.class);
                 startActivity(i);
             }
         });
+        whiteboardbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(),WhiteBoardActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
+    void updateDashboardUI()
+    {
+        UserDao dao=new UserDao();
+        Task<DocumentSnapshot> task=dao.getUserById(currentUser.getUid());
+        task.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    name.setText(user.getDisplayName());
+                    email.setText(user.getEmail());
+                    phone.setText("9990130735");
+                    Glide.with(getApplicationContext())
+                            .load(image_url).optionalCircleCrop()
+                            .into(profilepic);
+                    // Update their name and avatar
+                    ChatSDK.core().currentUser().setAvatarURL(image_url);
+                    // Push that data to Firebase
+                    ChatSDK.core().pushUser().subscribe(() -> {
+                        // Handle success
+                    }, throwable -> {
+                        // Handle failure
+                    });
+                }
+            }
+        });
 
 
-    public void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
 }

@@ -4,5 +4,6 @@ package com.example.engageteams.Models
 
 data class User(val email:String="",
                 val uid: String = "",
-                val displayName: String? = "",
+                val phone: String="",
+                val displayName: String = "",
                 val imageUrl: String = "")

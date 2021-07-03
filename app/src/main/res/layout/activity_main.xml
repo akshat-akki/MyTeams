@@ -5,29 +5,133 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UI.MainActivity">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="3"
-   android:layout_centerInParent="true">
-    <Button
-        android:id="@+id/MeetNowBtn"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
+    <RelativeLayout
+        android:id="@+id/titlebar_dashboard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Meetnow" />
-    <Button
-        android:id="@+id/TeamsBtn"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/title_dashboard">
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Teams" />
-    <Button
-        android:id="@+id/MoreBtn"
+        android:orientation="vertical"
+        android:layout_below="@+id/titlebar_dashboard"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="20dp"
+        android:id="@+id/card_view"
+        android:background="@drawable/card_view_back">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:src="@drawable/logo" />
+
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:layout_below="@+id/profile_image"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textSize="36dp"
+                    android:textColor="@color/font_blue"></TextView>
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name"
+                    android:text=""
+                    android:textColor="@color/font_blue"
+                    android:textSize="15dp">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/email"
+                    android:text=""
+                    android:textColor="@color/font_blue"
+                    android:textSize="15dp">
+
+                </TextView>
+            </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <GridLayout
+        android:id="@+id/buttons_grid"
         android:layout_width="wrap_content"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="More" />
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+       android:layout_marginBottom="40dp"
+        android:background="@drawable/dashboard_btn"
+        android:columnCount="2"
+        android:rowCount="2"
+        >
+        <Button
+            android:id="@+id/Teams_btn"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_column="0"
+            android:tag="0"
+            android:layout_row="0"
+            android:background="@color/transparent"
+            />
+
+        <Button
+            android:id="@+id/Meet_Now_btn"
+            android:layout_gravity="fill"
+            android:layout_column="1"
+            android:tag="1"
+            android:layout_row="0"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:background="@color/transparent"
+            />
+
+        <Button
+            android:id="@+id/schedule_meet_btn"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:tag="2"
+            android:background="@color/transparent"
+            />
+        <Button
+            android:id="@+id/white_board_btn"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_column="1"
+            android:tag="3"
+            android:layout_row="1"
+            android:background="@color/transparent"
+            />
+
+    </GridLayout>
+
+
+
 </RelativeLayout>
