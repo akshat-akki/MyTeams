@@ -7,6 +7,6 @@
     <color name="font_blue">#5887F9</color>
     <color name="textview_color">#BCC5D3</color>
     <color name="line_color">#E2E8ED</color>
-    <color name="black">#FF000000</color>
+    <color name="my_red">#FC5F6B</color>
 
 </resources>

@@ -1,17 +1,23 @@
 package com.example.engageteams.UI.MeetRooms;
 
 import android.Manifest;
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
@@ -21,11 +27,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.engageteams.R;
+import com.example.engageteams.UI.SplashActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
@@ -41,14 +51,17 @@ public class WaitingRoom extends AppCompatActivity {
     private static final int RECORD_PERMISSION_CODE = 102;
     private static final int STORAGE_PERMISSION_CODE = 101;
     private String room_name="";
+    boolean urlintentcalled=false;
     PreviewView previewView;
     ProcessCameraProvider cameraProvider;
     Preview preview;
     EditText meet_id;
-    int mic=1;
-    int cam=1;
+    boolean micmuted=false;
+    boolean cammuted=false;
     Button micbtn;
     Button cambtn;
+    Button viewEvents;
+    JitsiMeetConferenceOptions options = null;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     @Override
@@ -56,55 +69,96 @@ public class WaitingRoom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_room);
 
-        getLink();
+         getLink();
 
-        checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
-        checkPermission(Manifest.permission.RECORD_AUDIO, RECORD_PERMISSION_CODE);
-
-        previewView = findViewById(R.id.PreviewCamera);
-        Button join=findViewById(R.id.Join_Meet_Button);
-        micbtn=findViewById(R.id.microphone_button);
-        cambtn=findViewById(R.id.camera_button);
+         checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
+         checkPermission(Manifest.permission.RECORD_AUDIO, RECORD_PERMISSION_CODE);
+         TextView warning=findViewById(R.id.warning_text_view);
+         previewView = findViewById(R.id.PreviewCamera);
+         viewEvents=findViewById(R.id.View_Events_Button);
+         micbtn=findViewById(R.id.microphone_button);
+         cambtn=findViewById(R.id.camera_button);
          meet_id=findViewById(R.id.meet_id);
 
-        Button create=findViewById(R.id.Create_Meet_Button);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent i=new Intent(getApplicationContext(),MeetNow.class);
-//                i.setAction( "org.jitsi.meet.CONFERENCE");
-//                i.putExtra("Meet_ID",meet_id.getText().toString());
-//                startActivity(i);
-                JitsiMeetConferenceOptions options = null;
-                try {
-                    options = new JitsiMeetConferenceOptions.Builder()
-                            .setServerURL(new URL("https://meet.jit.si"))
-                            .setRoom("akki20000")
-                            .setVideoMuted(true)
-                            .setAudioMuted(true)
-                            .setFeatureFlag("invite.enabled",false)
-                            .setFeatureFlag("pip.enabled",true)
-                            .setFeatureFlag("lobby-mode.enabled",false)
-                            .build();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                MyMeetActivity.launch(getApplicationContext(), options);
-            }
+         Button create=findViewById(R.id.Enter_Meet_Button);
+         create.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 if (meet_id.getText().toString().length()>0) {
+                     room_name=meet_id.getText().toString().trim();
+                     warning.setVisibility(View.INVISIBLE);
+
+                     try {
+                          options = new JitsiMeetConferenceOptions.Builder()
+                                 .setServerURL(new URL("https://meet.jit.si"))
+                                 .setRoom(room_name)
+                                 .setVideoMuted(cammuted)
+                                 .setAudioMuted(micmuted)
+                                 .setFeatureFlag("invite.enabled", false)
+                                 .setFeatureFlag("pip.enabled", true)
+                                 .build();
+                          showdailog();
+                        }
+                     catch (MalformedURLException e) {
+                         e.printStackTrace();
+                     }
+
+                 }
+                 else {
+                     warning.setVisibility(View.VISIBLE);
+                 }
+             }
         });
 
 
-        join.setOnClickListener(new View.OnClickListener() {
+
+        viewEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent i=new Intent(getApplicationContext(),MeetNow.class);
-               i.putExtra("Meet_ID",meet_id.getText().toString());
-               startActivity(i);
-
+                long startMillis = System.currentTimeMillis();
+                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                ContentUris.appendId(builder, startMillis);
+               Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+                startActivity(intent);
             }
         });
         startcamera();
 
+    }
+    public void showdailog()
+    {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(WaitingRoom.this);
+        builder1.setTitle("SHARE MEETING");
+        builder1.setMessage("Meet ID "+room_name);
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                "Share Link",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        createinvitelinks();
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "Enter Meet",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            MyMeetActivity.launch(getApplicationContext(), options);
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(getApplicationContext(),
+                                    "SORRY!! UNABLE TO START MEET",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
     public void checkPermission(String permission, int requestCode)
     {
@@ -112,9 +166,42 @@ public class WaitingRoom extends AppCompatActivity {
         ActivityCompat.requestPermissions(WaitingRoom.this, new String[] { permission }, requestCode);
         }
         else {
-            //Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }
     }
+    public void createinvitelinks()
+    {
+        Log.d("domain","click");
+        String sharelinktext  = "https://teamsmy.page.link/?"+
+                "link=https://www.example.com/?meetid="+room_name+"%"+
+                "&apn="+ getPackageName()+
+                "&st="+"My Teams"+
+                "&sd="+"INVITE LINK!!";
+
+        Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLongLink(Uri.parse(sharelinktext))  // manually
+                .buildShortDynamicLink()
+                .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                        if (task.isSuccessful()) {
+                            // Short link created
+                            Uri shortLink = task.getResult().getShortLink();
+                            Uri flowchartLink = task.getResult().getPreviewLink();
+                            Log.e("main ", "short link "+ shortLink.toString());
+                            // share app dialog
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT,  shortLink.toString());
+                            intent.setType("text/plain");
+                            startActivity(intent);
+                        } else {
+                            Log.e("main", " error "+task.getException() );
+                        }
+                    }
+                });
+
+    }
+
     private void startcamera()
     {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -150,28 +237,28 @@ public class WaitingRoom extends AppCompatActivity {
 
     public void micClicked(View view)
     {
-        if(mic==1)
+        if(micmuted==false)
         {
             Drawable myDrawable = getResources().getDrawable(R.drawable.ic_baseline_mic_off);
               micbtn.setForeground(myDrawable);
-              mic=0;
+              micmuted=true;
         }
         else
         {
             Drawable myDrawable = getResources().getDrawable(R.drawable.ic_baseline_mic);
             micbtn.setForeground(myDrawable);
-            mic=1;
+            micmuted=false;
         }
     }
     public void camClicked(View view)
     {
-        if(cam==1)
+        if(cammuted==false)
         {
             Drawable camDrawable = getResources().getDrawable(R.drawable.ic_baseline_videocam_off_24);
             cambtn.setForeground(camDrawable);
             cameraProvider.unbindAll();
             previewView.setForeground(getResources().getDrawable(R.color.black));
-            cam=0;
+            cammuted=true;
 
         }
         else
@@ -181,7 +268,7 @@ public class WaitingRoom extends AppCompatActivity {
             previewView.setBackgroundResource(0);
             previewView.setForeground(null);
             bindPreview(cameraProvider);
-            cam=1;
+            cammuted=false;
         }
     }
     public void getLink()
@@ -194,6 +281,8 @@ public class WaitingRoom extends AppCompatActivity {
                         // Get deep link from result (may be null if no link is found)
                         Uri deepLink = null;
                         if (pendingDynamicLinkData != null) {
+                            urlintentcalled=true;
+                            viewEvents.setVisibility(View.INVISIBLE);
                             deepLink = pendingDynamicLinkData.getLink();
                             String referlink=deepLink.toString();
                             try {
@@ -226,5 +315,16 @@ public class WaitingRoom extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(urlintentcalled==false)
+        super.onBackPressed();
+        else
+        {
+            Intent i=new Intent(getApplicationContext(), SplashActivity.class);
+            startActivity(i);
+        }
     }
 }

@@ -40,17 +40,17 @@ import timber.log.Timber;
 //public class MeetNow extends JitsiMeetActivity {
 
  public  class MeetNow extends FragmentActivity implements JitsiMeetActivityInterface {
-        private JitsiMeetView view;
-        String room_name;
-     JitsiMeetOngoingConferenceService service=new JitsiMeetOngoingConferenceService();
-        FirebaseAuth auth=FirebaseAuth.getInstance();
-        FirebaseUser currentUser=auth.getCurrentUser();
-        private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                onBroadcastReceived(intent);
-            }
-        };
+     private JitsiMeetView view;
+     String room_name;
+     JitsiMeetOngoingConferenceService service = new JitsiMeetOngoingConferenceService();
+     FirebaseAuth auth = FirebaseAuth.getInstance();
+     FirebaseUser currentUser = auth.getCurrentUser();
+     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+         @Override
+         public void onReceive(Context context, Intent intent) {
+             onBroadcastReceived(intent);
+         }
+     };
 
      @Override
      public void onBackPressed() {
@@ -75,32 +75,32 @@ import timber.log.Timber;
      }
 
      @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_meet_now);
-            Intent i=getIntent();
-             room_name=i.getStringExtra("Meet_ID");
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_meet_now);
+         Intent i = getIntent();
+         room_name = i.getStringExtra("Meet_ID");
 
-            view = new JitsiMeetView(MeetNow.this);
-           FrameLayout videoView = (FrameLayout) findViewById(R.id.videoview);
-            JitsiMeetConferenceOptions options = null;
-            try {
-                options = new JitsiMeetConferenceOptions.Builder()
-                        .setServerURL(new URL("https://meet.jit.si"))
-                        .setRoom(room_name)
-                        .setVideoMuted(true)
-                        .setAudioMuted(true)
-                        .setFeatureFlag("invite.enabled",false)
-                        .setFeatureFlag("pip.enabled",true)
-                        .setFeatureFlag("lobby-mode.enabled",false)
-                        .build();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            view.join(options);
-            videoView.addView(view);
-            registerForBroadcastMessages();
-        }
+         view = new JitsiMeetView(MeetNow.this);
+         FrameLayout videoView = (FrameLayout) findViewById(R.id.videoview);
+         JitsiMeetConferenceOptions options = null;
+         try {
+             options = new JitsiMeetConferenceOptions.Builder()
+                     .setServerURL(new URL("https://meet.jit.si"))
+                     .setRoom(room_name)
+                     .setVideoMuted(true)
+                     .setAudioMuted(true)
+                     .setFeatureFlag("invite.enabled", false)
+                     .setFeatureFlag("pip.enabled", true)
+                     .setFeatureFlag("lobby-mode.enabled", false)
+                     .build();
+         } catch (MalformedURLException e) {
+             e.printStackTrace();
+         }
+         view.join(options);
+         videoView.addView(view);
+         registerForBroadcastMessages();
+     }
 
      @Override
      protected void onDestroy() {
@@ -108,12 +108,14 @@ import timber.log.Timber;
          super.onDestroy();
 
      }
+
      @Override
      public void onNewIntent(Intent intent) {
          super.onNewIntent(intent);
 
          JitsiMeetActivityDelegate.onNewIntent(intent);
      }
+
      @SuppressLint("MissingSuperCall")
      @Override
      public void onRequestPermissionsResult(
@@ -122,13 +124,14 @@ import timber.log.Timber;
              final int[] grantResults) {
          JitsiMeetActivityDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
      }
-     public void onInviteClick(View v) {
-             createinvitelinks();
-            }
+
+//     public void onInviteClick(View v) {
+//         createinvitelinks();
+//     }
 
 
-        private void registerForBroadcastMessages() {
-            IntentFilter intentFilter = new IntentFilter();
+     private void registerForBroadcastMessages() {
+         IntentFilter intentFilter = new IntentFilter();
 
             /* This registers for every possible event sent from JitsiMeetSDK
                If only some of the events are needed, the for loop can be replaced
@@ -137,75 +140,40 @@ import timber.log.Timber;
                     intentFilter.addAction(BroadcastEvent.Type.CONFERENCE_TERMINATED.getAction());
                     ... other events
              */
-            for (BroadcastEvent.Type type : BroadcastEvent.Type.values()) {
-                intentFilter.addAction(type.getAction());
-            }
+         for (BroadcastEvent.Type type : BroadcastEvent.Type.values()) {
+             intentFilter.addAction(type.getAction());
+         }
 
-            LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
-        }
+         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+     }
 
-        // Example for handling different JitsiMeetSDK events
-        private void onBroadcastReceived(Intent intent) {
-            if (intent != null) {
-                BroadcastEvent event = new BroadcastEvent(intent);
+     // Example for handling different JitsiMeetSDK events
+     private void onBroadcastReceived(Intent intent) {
+         if (intent != null) {
+             BroadcastEvent event = new BroadcastEvent(intent);
 
-                switch (event.getType()) {
-                    case CONFERENCE_JOINED:
+             switch (event.getType()) {
+                 case CONFERENCE_JOINED:
 
-                        Timber.i("Conference Joined with url%s", event.getData().get("url"));
-                        break;
-                    case PARTICIPANT_JOINED:
-                        Timber.i("Participant joined%s", event.getData().get("name"));
-                        break;
-                    case CONFERENCE_TERMINATED:
-                        finish();
+                     Timber.i("Conference Joined with url%s", event.getData().get("url"));
+                     break;
+                 case PARTICIPANT_JOINED:
+                     Timber.i("Participant joined%s", event.getData().get("name"));
+                     break;
+                 case CONFERENCE_TERMINATED:
+                     finish();
 
-                }
-            }
-        }
+             }
+         }
+     }
 
-        // Example for sending actions to JitsiMeetSDK
-        private void hangUp() {
-            Intent hangupBroadcastIntent = BroadcastIntentHelper.buildHangUpIntent();
-            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(hangupBroadcastIntent);
-        }
-
-
+     // Example for sending actions to JitsiMeetSDK
+     private void hangUp() {
+         Intent hangupBroadcastIntent = BroadcastIntentHelper.buildHangUpIntent();
+         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(hangupBroadcastIntent);
+     }
 
 
-        public void createinvitelinks()
-        {
-            Log.d("domain","click");
-            String sharelinktext  = "https://teamsmy.page.link/?"+
-                    "link=https://www.example.com/?meetid="+room_name+"%"+
-                    "&apn="+ getPackageName()+
-                    "&st="+"My Teams"+
-                    "&sd="+"INVITE LINK!!";
-
-            Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setLongLink(Uri.parse(sharelinktext))  // manually
-                    .buildShortDynamicLink()
-                    .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
-                        @Override
-                        public void onComplete(@NonNull Task<ShortDynamicLink> task) {
-                            if (task.isSuccessful()) {
-                                // Short link created
-                                Uri shortLink = task.getResult().getShortLink();
-                                Uri flowchartLink = task.getResult().getPreviewLink();
-                                Log.e("main ", "short link "+ shortLink.toString());
-                                // share app dialog
-                                Intent intent = new Intent();
-                                intent.setAction(Intent.ACTION_SEND);
-                                intent.putExtra(Intent.EXTRA_TEXT,  shortLink.toString());
-                                intent.setType("text/plain");
-                                startActivity(intent);
-                            } else {
-                                Log.e("main", " error "+task.getException() );
-                            }
-                        }
-                    });
-
-        }
 
 
      @Override
