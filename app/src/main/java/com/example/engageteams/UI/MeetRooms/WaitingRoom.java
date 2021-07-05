@@ -1,27 +1,24 @@
 package com.example.engageteams.UI.MeetRooms;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.Camera;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.Preview;
-
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.engageteams.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,7 +27,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 
@@ -42,7 +42,14 @@ public class WaitingRoom extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 101;
     private String room_name="";
     PreviewView previewView;
+    ProcessCameraProvider cameraProvider;
+    Preview preview;
     EditText meet_id;
+    int mic=1;
+    int cam=1;
+    Button micbtn;
+    Button cambtn;
+
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +63,33 @@ public class WaitingRoom extends AppCompatActivity {
 
         previewView = findViewById(R.id.PreviewCamera);
         Button join=findViewById(R.id.Join_Meet_Button);
+        micbtn=findViewById(R.id.microphone_button);
+        cambtn=findViewById(R.id.camera_button);
          meet_id=findViewById(R.id.meet_id);
 
         Button create=findViewById(R.id.Create_Meet_Button);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),MeetNow.class);
-                i.putExtra("Meet_ID",meet_id.getText().toString());
-                startActivity(i);
+//                Intent i=new Intent(getApplicationContext(),MeetNow.class);
+//                i.setAction( "org.jitsi.meet.CONFERENCE");
+//                i.putExtra("Meet_ID",meet_id.getText().toString());
+//                startActivity(i);
+                JitsiMeetConferenceOptions options = null;
+                try {
+                    options = new JitsiMeetConferenceOptions.Builder()
+                            .setServerURL(new URL("https://meet.jit.si"))
+                            .setRoom("akki20000")
+                            .setVideoMuted(true)
+                            .setAudioMuted(true)
+                            .setFeatureFlag("invite.enabled",false)
+                            .setFeatureFlag("pip.enabled",true)
+                            .setFeatureFlag("lobby-mode.enabled",false)
+                            .build();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                MyMeetActivity.launch(getApplicationContext(), options);
             }
         });
 
@@ -95,7 +120,7 @@ public class WaitingRoom extends AppCompatActivity {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                 cameraProvider = cameraProviderFuture.get();
                 bindPreview(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 // No errors need to be handled for this Future.
@@ -104,7 +129,7 @@ public class WaitingRoom extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        Preview preview = new Preview.Builder()
+        preview = new Preview.Builder()
                 .build();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -112,7 +137,52 @@ public class WaitingRoom extends AppCompatActivity {
                 .build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        Camera camera = (Camera) cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview);
+        try {
+            cameraProvider.unbindAll();
+            cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void micClicked(View view)
+    {
+        if(mic==1)
+        {
+            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_baseline_mic_off);
+              micbtn.setForeground(myDrawable);
+              mic=0;
+        }
+        else
+        {
+            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_baseline_mic);
+            micbtn.setForeground(myDrawable);
+            mic=1;
+        }
+    }
+    public void camClicked(View view)
+    {
+        if(cam==1)
+        {
+            Drawable camDrawable = getResources().getDrawable(R.drawable.ic_baseline_videocam_off_24);
+            cambtn.setForeground(camDrawable);
+            cameraProvider.unbindAll();
+            previewView.setForeground(getResources().getDrawable(R.color.black));
+            cam=0;
+
+        }
+        else
+        {
+            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_baseline_videocam);
+            cambtn.setForeground(myDrawable);
+            previewView.setBackgroundResource(0);
+            previewView.setForeground(null);
+            bindPreview(cameraProvider);
+            cam=1;
+        }
     }
     public void getLink()
     {

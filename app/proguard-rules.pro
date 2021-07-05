@@ -14,7 +14,7 @@
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
 
-
+#
 -keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
 -keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
@@ -67,7 +67,7 @@
 
 -keep class org.jitsi.meet.** { *; }
 -keep class org.jitsi.meet.sdk.** { *; }
-
+-keep class org.jitsi.meet.sdk.** { *; }
 # We added the following when we switched minifyEnabled on. Probably because we
 # ran the app and hit problems...
 
@@ -89,3 +89,4 @@
 
 # Rule to avoid build errors related to SVGs.
 -keep public class com.horcrux.svg.** {*;}
+

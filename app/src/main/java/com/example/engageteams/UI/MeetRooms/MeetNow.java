@@ -8,14 +8,10 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -23,18 +19,19 @@ import com.example.engageteams.R;
 import com.facebook.react.modules.core.PermissionListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
 
 import org.jitsi.meet.sdk.BroadcastEvent;
 import org.jitsi.meet.sdk.BroadcastIntentHelper;
-import org.jitsi.meet.sdk.JitsiMeet;
-import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate;
 import org.jitsi.meet.sdk.JitsiMeetActivityInterface;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+import org.jitsi.meet.sdk.JitsiMeetOngoingConferenceService;
 import org.jitsi.meet.sdk.JitsiMeetView;
+import org.jitsi.meet.sdk.log.JitsiMeetLogger;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,6 +42,9 @@ import timber.log.Timber;
  public  class MeetNow extends FragmentActivity implements JitsiMeetActivityInterface {
         private JitsiMeetView view;
         String room_name;
+     JitsiMeetOngoingConferenceService service=new JitsiMeetOngoingConferenceService();
+        FirebaseAuth auth=FirebaseAuth.getInstance();
+        FirebaseUser currentUser=auth.getCurrentUser();
         private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -54,7 +54,13 @@ import timber.log.Timber;
 
      @Override
      public void onBackPressed() {
-      //   super.onBackPressed();
+         // super.onBackPressed();
+
+         view.enterPictureInPicture();
+//         JitsiMeetActivityDelegate.onBackPressed();
+//         Intent i=new Intent(getApplicationContext(), MainActivity.class);
+//         i.putExtra("Profile_pic_URL",currentUser.getPhotoUrl());
+//         onNewIntent(i);
 
      }
 
@@ -82,7 +88,10 @@ import timber.log.Timber;
                 options = new JitsiMeetConferenceOptions.Builder()
                         .setServerURL(new URL("https://meet.jit.si"))
                         .setRoom(room_name)
+                        .setVideoMuted(true)
+                        .setAudioMuted(true)
                         .setFeatureFlag("invite.enabled",false)
+                        .setFeatureFlag("pip.enabled",true)
                         .setFeatureFlag("lobby-mode.enabled",false)
                         .build();
             } catch (MalformedURLException e) {
@@ -95,12 +104,9 @@ import timber.log.Timber;
 
      @Override
      protected void onDestroy() {
+         leave();
          super.onDestroy();
 
-         view.dispose();
-         view = null;
-
-         JitsiMeetActivityDelegate.onHostDestroy(this);
      }
      @Override
      public void onNewIntent(Intent intent) {
@@ -145,12 +151,14 @@ import timber.log.Timber;
 
                 switch (event.getType()) {
                     case CONFERENCE_JOINED:
+
                         Timber.i("Conference Joined with url%s", event.getData().get("url"));
                         break;
                     case PARTICIPANT_JOINED:
                         Timber.i("Participant joined%s", event.getData().get("name"));
                         break;
-
+                    case CONFERENCE_TERMINATED:
+                        finish();
 
                 }
             }
@@ -217,8 +225,21 @@ import timber.log.Timber;
 
          JitsiMeetActivityDelegate.onHostPause(this);
      }
+     public void leave() {
+
+         if (view != null) {
+             view.leave();
+         } else {
+             JitsiMeetLogger.w("Cannot leave, view is null");
+         }
+     }
+     @Override
+     public void finish() {
+         leave();
+         super.finish();
+     }
 
 
-    }
+ }
 
 

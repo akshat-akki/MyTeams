@@ -123,7 +123,7 @@ class AuthenticationActivity : AppCompatActivity() {
     //Updates the Activity UI for necessary changes
     private fun updateUI(firebaseUser: FirebaseUser?) {
         if(firebaseUser != null) {
-
+            signInButton.visibility = View.INVISIBLE
             val user = User(
                 firebaseUser.email.toString(),
                 firebaseUser.uid,
@@ -136,7 +136,7 @@ class AuthenticationActivity : AppCompatActivity() {
             image_url=user.imageUrl;
             val details:AccountDetails = AccountDetails.username(user.email,"")
             ChatSDK.auth().authenticate(details).subscribe()
-            val delay = 4000 //delay period of  4 seconds
+            val delay = 3000 //delay period of  3 seconds
             Handler(Looper.getMainLooper()).postDelayed({
                 val mainActivityIntent = Intent(this, MainActivity::class.java)
                 mainActivityIntent.putExtra("Profile_pic_URL",image_url);

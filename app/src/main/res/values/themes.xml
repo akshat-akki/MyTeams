@@ -14,11 +14,17 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="CustomChatSDKTheme" parent="ChatSDKTheme">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="colorControlNormal">@color/text_primary</item>
-        // Other custom attributes
+        <item name="colorPrimary">@color/font_blue</item>
+        <item name="colorAccent">#5887F9</item>
+        <item name="actionBarBackgroundColor">#CC36499C</item>
+        <item name="actionBarTextColor">@color/white
+        </item>
+        <item name="systemDefaultBubbleColor">#5887F9</item>
+        <item name="systemMessageBubbleDrawable">@drawable/chatbubble</item>
+        <item name="incomingBubbleDrawable">@drawable/chatbubble</item>
+        <item name="incomingIconDrawable">@drawable/chatbubble</item>
+        <item name="outcomingBubbleDrawable">@drawable/chatbubble</item>
+        <item name="incomingUserNameTextColor">@color/red</item>
     </style>
     <style name="CalenderViewCustom" parent="Theme.AppCompat">
         <item name="colorAccent">@color/red</item>
