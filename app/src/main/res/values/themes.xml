@@ -20,10 +20,6 @@
         <item name="actionBarTextColor">@color/white
         </item>
         <item name="systemDefaultBubbleColor">#5887F9</item>
-        <item name="systemMessageBubbleDrawable">@drawable/chatbubble</item>
-        <item name="incomingBubbleDrawable">@drawable/chatbubble</item>
-        <item name="incomingIconDrawable">@drawable/chatbubble</item>
-        <item name="outcomingBubbleDrawable">@drawable/chatbubble</item>
         <item name="incomingUserNameTextColor">@color/red</item>
     </style>
     <style name="CalenderViewCustom" parent="Theme.AppCompat">

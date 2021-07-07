@@ -90,6 +90,7 @@ import timber.log.Timber;
                      .setRoom(room_name)
                      .setVideoMuted(true)
                      .setAudioMuted(true)
+                     .setFeatureFlag("FULLSCREEN_ENABLED",false)
                      .setFeatureFlag("invite.enabled", false)
                      .setFeatureFlag("pip.enabled", true)
                      .setFeatureFlag("lobby-mode.enabled", false)
@@ -101,6 +102,7 @@ import timber.log.Timber;
          videoView.addView(view);
          registerForBroadcastMessages();
      }
+
 
      @Override
      protected void onDestroy() {

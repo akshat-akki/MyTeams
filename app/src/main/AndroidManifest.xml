@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.engageteams" >
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -56,13 +57,14 @@
         </activity>
         <activity android:name=".UI.Auth.AuthenticationActivity" />
         <activity android:name=".UI.MainActivity" />
-        <activity android:name=".UI.MeetRooms.MyMeetActivity" />
-        <activity android:name=".UI.MeetRooms.MeetNow"
+        <activity android:name=".UI.MeetRooms.MyMeetActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".UI.MeetRooms.MeetNow"
+
             />
     </application>
 

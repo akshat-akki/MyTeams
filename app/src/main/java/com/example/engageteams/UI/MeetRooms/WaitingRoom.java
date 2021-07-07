@@ -43,6 +43,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
+import sdk.chat.core.session.ChatSDK;
 
 
 public class WaitingRoom extends AppCompatActivity {
@@ -94,6 +95,7 @@ public class WaitingRoom extends AppCompatActivity {
                                  .setRoom(room_name)
                                  .setVideoMuted(cammuted)
                                  .setAudioMuted(micmuted)
+                                  .setFeatureFlag("chat.enabled",false)
                                  .setFeatureFlag("invite.enabled", false)
                                  .setFeatureFlag("pip.enabled", true)
                                  .build();
@@ -146,12 +148,12 @@ public class WaitingRoom extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            MyMeetActivity.launch(getApplicationContext(), options);
+                            MyMeetActivity.launch(WaitingRoom.this,options);
                         }
                         catch (Exception e)
                         {
                             Toast.makeText(getApplicationContext(),
-                                    "SORRY!! UNABLE TO START MEET",
+                                    e.getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
                     }
@@ -160,6 +162,8 @@ public class WaitingRoom extends AppCompatActivity {
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
+
     public void checkPermission(String permission, int requestCode)
     {
         if (ContextCompat.checkSelfPermission(WaitingRoom.this, permission) == PackageManager.PERMISSION_DENIED) {
@@ -168,7 +172,7 @@ public class WaitingRoom extends AppCompatActivity {
         else {
         }
     }
-    public void createinvitelinks()
+    private void createinvitelinks()
     {
         Log.d("domain","click");
         String sharelinktext  = "https://teamsmy.page.link/?"+
@@ -298,14 +302,6 @@ public class WaitingRoom extends AppCompatActivity {
                                e.printStackTrace();
                             }
                         }
-
-
-                        // Handle the deep link. For example, open the linked
-                        // content, or apply promotional credit to the user's
-                        // account.
-                        // ...
-
-                        // ...
                     }
                 })
                 .addOnFailureListener(this, new OnFailureListener() {

@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/view_calender_btn">
+                    android:background="@drawable/view_calender_events">
                 </Button>
 
         </RelativeLayout>
