@@ -19,6 +19,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import sdk.chat.core.session.ChatSDK;
 
@@ -79,6 +83,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        image_url=ChatSDK.core().currentUser().getAvatarURL();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map imagemap=new HashMap<String,Object>();
+        imagemap.put("imageUrl",image_url);
+        db.collection("users").document(currentUser.getUid()).update(imagemap);
+        updateDashboardUI();
+    }
+
     void updateDashboardUI()
     {
         UserDao dao=new UserDao();
@@ -90,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                     User user = documentSnapshot.toObject(User.class);
                     name.setText(user.getDisplayName());
                     email.setText(user.getEmail());
-                    phone.setText("9990130735");
                     Glide.with(getApplicationContext())
                             .load(image_url).optionalCircleCrop()
                             .into(profilepic);
