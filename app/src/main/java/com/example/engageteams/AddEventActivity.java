@@ -116,6 +116,7 @@ public class AddEventActivity extends AppCompatActivity {
         Toast.makeText(this,"EVENT ADDED!!",Toast.LENGTH_LONG).show();
         Intent i=new Intent(getApplicationContext(), MainActivity.class);
         i.putExtra("Profile_pic_URL",currentUser.getPhotoUrl());
+        startActivity(i);
 
     }
     private void addEvent()

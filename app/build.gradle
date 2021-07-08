@@ -15,6 +15,11 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
     packagingOptions {
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
@@ -91,4 +96,16 @@ dependencies {
     implementation 'com.github.duty-os:white-sdk-android:2.9.14'
     implementation 'com.android.volley:volley:1.2.0'
     implementation 'com.github.tylersuehr7:chips-input-layout:2.3'
+    //chat sdk modules
+    implementation "sdk.chat:pro-message-video:5.3.5"
+    implementation "sdk.chat:pro-message-audio:5.3.5"
+    implementation "sdk.chat:pro-message-sticker:5.3.5"
+    implementation "sdk.chat:pro-encryption:5.3.5"
+    implementation "sdk.chat:pro-firebase-read-receipts:5.3.5"
+    implementation "sdk.chat:pro-firebase-typing-indicator:5.3.5"
+    implementation "sdk.chat:pro-message-file:5.3.5"
+    implementation "sdk.chat:pro-contact-book:5.3.5"
+    implementation "sdk.chat:pro-firebase-last-online:5.3.5"
+    implementation "sdk.chat:pro-firebase-blocking:5.3.5"
+
 }

@@ -106,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
                     User user = documentSnapshot.toObject(User.class);
                     name.setText(user.getDisplayName());
                     email.setText(user.getEmail());
+                    if(user.getPhone().length()>9)
+                    {
+                        phone.setText(user.getPhone());
+                    }
                     Glide.with(getApplicationContext())
                             .load(image_url).optionalCircleCrop()
                             .into(profilepic);
