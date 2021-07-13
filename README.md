@@ -1,5 +1,9 @@
 # MyTeams for Android 
 ### Android application for group video calling and collaboration
+
+## APK
+-APk [Download](https://drive.google.com/file/d/1JvDDEB4R5NE1sEn-ocl--zx76MWvC1XW/view?usp=sharing)
+
 ## Technical details
 - **Firebase Backend Support**
 - **Used Java and Kotlin -** 
@@ -24,5 +28,3 @@
 - Interactive whiteboard
 - Schedule meet using google calender
 
-## APK
--APk [Download](https://drive.google.com/file/d/1JvDDEB4R5NE1sEn-ocl--zx76MWvC1XW/view?usp=sharing)
