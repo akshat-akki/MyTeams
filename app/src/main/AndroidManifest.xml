@@ -63,9 +63,6 @@
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".UI.MeetRooms.MeetNow"
-
-            />
     </application>
 
 </manifest>

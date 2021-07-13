@@ -163,6 +163,13 @@
           android:textColor="#212121"
           android:textColorHint="#757575"
           app:chip_showDetails="true" />
+      <ProgressBar
+          android:id="@+id/calender_delayprogressbar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:visibility="gone"
+          ></ProgressBar>
       <Button
           android:id="@+id/create_event_btn"
           android:layout_width="match_parent"

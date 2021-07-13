@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         Button teamsbtn=findViewById(R.id.Teams_btn);
         Button schedulemeetbtn=findViewById(R.id.schedule_meet_btn);
         Button whiteboardbtn=findViewById(R.id.white_board_btn);
+
+       //start meet activity
         meetnowbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,14 +61,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //start teams chat button
         teamsbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Intent intent=new Intent(this,ChatSDK.ui().getMainActivity().class);
                 //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ChatSDK.ui().startMainActivity(MainActivity.this);
+
             }
         });
+
+        //start schedule meet activity
         schedulemeetbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,11 +80,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        //start whiteboard activity
         whiteboardbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getApplicationContext(),WhiteBoardActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        profilepic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChatSDK.ui().startProfileActivity(MainActivity.this,ChatSDK.currentUserID());
             }
         });
 
@@ -95,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         updateDashboardUI();
     }
 
+    //updating the dashboard of UI
     void updateDashboardUI()
     {
         UserDao dao=new UserDao();

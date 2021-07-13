@@ -1,12 +1,15 @@
 package com.example.engageteams.UI.MeetRooms;
+/*
+    Custom built MyMeetActivity that subclasses the JitsiMeetActivity so as
+    make our own fuction call and implement custom made methods!!
 
+ */
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,10 +43,10 @@ import sdk.chat.core.session.ChatSDK;
 
 
 public class MyMeetActivity extends JitsiMeetActivity {
+
     private static String room_name;
     private JitsiMeetView view;
     FrameLayout videoView;
-    boolean gone = false;
     Button chatbtn;
     CardView cardView;
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -57,13 +60,15 @@ public class MyMeetActivity extends JitsiMeetActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.myactivity);
         view = new JitsiMeetView(MyMeetActivity.this);
-         videoView = (FrameLayout) findViewById(R.id.meetView);
-         cardView=findViewById(R.id.card_view_meet);
-          chatbtn=findViewById(R.id.chat_btn);
+        videoView = (FrameLayout) findViewById(R.id.meetView);
+        cardView=findViewById(R.id.card_view_meet);
+        chatbtn=findViewById(R.id.chat_btn);
         this.registerForBroadcastMessages();
         if (!this.extraInitialize()) {
             this.initialize();
         }
+
+        //Event of message received
         Disposable d = ChatSDK.events().sourceOnMain()
                 .filter(NetworkEvent.filterType(EventType.MessageAdded))
                 .subscribe(new Consumer<NetworkEvent>() {
@@ -78,6 +83,7 @@ public class MyMeetActivity extends JitsiMeetActivity {
                     }
                 });
     }
+
     @SuppressLint("WrongConstant")
     public static void launch(Context context, JitsiMeetConferenceOptions options) {
         Intent intent = new Intent(context, MyMeetActivity.class);
@@ -87,7 +93,6 @@ public class MyMeetActivity extends JitsiMeetActivity {
         if (!(context instanceof Activity)) {
             intent.setFlags(268435456);
         }
-
         context.startActivity(intent);
     }
     public void onNewIntent(Intent intent) {
@@ -112,6 +117,7 @@ public class MyMeetActivity extends JitsiMeetActivity {
     }
     public void chatClicked(View v)
     {
+        //changing the background of chat indicator when chat button is clicked
         chatbtn.setForeground(getResources().getDrawable(R.drawable.chat_btn_normal));
         ChatSDK.ui().startMainActivity(MyMeetActivity.this);
     }
@@ -140,10 +146,14 @@ public class MyMeetActivity extends JitsiMeetActivity {
 
             LocalBroadcastManager.getInstance(this).registerReceiver(this.broadcastReceiver, intentFilter);
         }
+
+        //broadcasting events
     private void onBroadcastReceived(Intent intent) {
         if (intent != null) {
             BroadcastEvent event = new BroadcastEvent(intent);
             switch(event.getType()) {
+                case SCREEN_SHARE_TOGGLED:
+                    view.enterPictureInPicture();
                 case CONFERENCE_JOINED:
                     this.onConferenceJoined(event.getData());
                     break;
@@ -162,6 +172,8 @@ public class MyMeetActivity extends JitsiMeetActivity {
         }
 
     }
+
+    //custom made invite link function !!
     public void inviteClicked(View btnview)
     {
         Log.d("domain","click");
@@ -172,7 +184,7 @@ public class MyMeetActivity extends JitsiMeetActivity {
                 "&sd="+"INVITE LINK!!";
 
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(Uri.parse(sharelinktext))  // manually
+                .setLongLink(Uri.parse(sharelinktext))  // manually generating the dynamic link
                 .buildShortDynamicLink()
                 .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
                     @Override
@@ -196,10 +208,7 @@ public class MyMeetActivity extends JitsiMeetActivity {
 
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        JitsiMeetActivityDelegate.onHostDestroy(this);
-    }
+
 
     public void onResume() {
         super.onResume();

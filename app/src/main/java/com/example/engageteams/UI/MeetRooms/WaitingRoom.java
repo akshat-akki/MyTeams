@@ -45,12 +45,14 @@ import java.util.concurrent.ExecutionException;
 
 import sdk.chat.core.session.ChatSDK;
 
-
+/*
+    Waiting Room Activity before entering the real meet
+*/
 public class WaitingRoom extends AppCompatActivity {
 
+    //declaring global variables
     private static final int CAMERA_PERMISSION_CODE = 100;
     private static final int RECORD_PERMISSION_CODE = 102;
-    private static final int STORAGE_PERMISSION_CODE = 101;
     private String room_name="";
     boolean urlintentcalled=false;
     PreviewView previewView;
@@ -81,6 +83,7 @@ public class WaitingRoom extends AppCompatActivity {
          cambtn=findViewById(R.id.camera_button);
          meet_id=findViewById(R.id.meet_id);
 
+         //function call when create button clicked
          Button create=findViewById(R.id.Enter_Meet_Button);
          create.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -113,7 +116,7 @@ public class WaitingRoom extends AppCompatActivity {
         });
 
 
-
+        //view events button clicked
         viewEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,6 +131,8 @@ public class WaitingRoom extends AppCompatActivity {
         startcamera();
 
     }
+
+    //function to show dailog box before entering the meet
     public void showdailog()
     {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(WaitingRoom.this);
@@ -164,6 +169,7 @@ public class WaitingRoom extends AppCompatActivity {
     }
 
 
+    // function the get user permissions
     public void checkPermission(String permission, int requestCode)
     {
         if (ContextCompat.checkSelfPermission(WaitingRoom.this, permission) == PackageManager.PERMISSION_DENIED) {
@@ -172,6 +178,8 @@ public class WaitingRoom extends AppCompatActivity {
         else {
         }
     }
+
+    //generating invite links
     private void createinvitelinks()
     {
         Log.d("domain","click");
@@ -239,6 +247,7 @@ public class WaitingRoom extends AppCompatActivity {
         }
     }
 
+    //toggling mic clicked
     public void micClicked(View view)
     {
         if(micmuted==false)
@@ -254,6 +263,8 @@ public class WaitingRoom extends AppCompatActivity {
             micmuted=false;
         }
     }
+
+    //toggling cam clicked
     public void camClicked(View view)
     {
         if(cammuted==false)
@@ -275,6 +286,8 @@ public class WaitingRoom extends AppCompatActivity {
             cammuted=false;
         }
     }
+
+    //getting the link when user enters the meet from invite URL
     public void getLink()
     {
         FirebaseDynamicLinks.getInstance()

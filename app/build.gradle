@@ -96,6 +96,7 @@ dependencies {
     implementation 'com.github.duty-os:white-sdk-android:2.9.14'
     implementation 'com.android.volley:volley:1.2.0'
     implementation 'com.github.tylersuehr7:chips-input-layout:2.3'
+
     //chat sdk modules
     implementation "sdk.chat:pro-message-video:5.3.5"
     implementation "sdk.chat:pro-message-audio:5.3.5"

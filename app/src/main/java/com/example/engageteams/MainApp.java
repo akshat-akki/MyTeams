@@ -75,7 +75,8 @@ public class MainApp extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-ChatSDK.ui().setSplashScreenActivity(SplashActivity.class);
+        //setting custom splash activity of sdk
+         ChatSDK.ui().setSplashScreenActivity(SplashActivity.class);
 
     }
 }

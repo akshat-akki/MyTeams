@@ -19,9 +19,8 @@ import com.example.engageteams.UI.MeetRooms.WaitingRoom;
 import java.util.Calendar;
 
 public class CalenderActivity extends AppCompatActivity {
+
     private static final int CALENDER_PERMISSION_CODE = 300;
-    private static final int CALENDER_PERMISSION_CODE_2 = 200;
-    long startMillis = 0;
     Calendar beginTime = Calendar.getInstance();
 
     @Override
@@ -30,7 +29,7 @@ public class CalenderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calender);
 
         checkPermission(Manifest.permission.READ_CALENDAR,CALENDER_PERMISSION_CODE );
-        checkPermission(Manifest.permission.WRITE_CALENDAR,CALENDER_PERMISSION_CODE_2);
+
         CalendarView calendarView=(CalendarView) findViewById(R.id.calender_view);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
