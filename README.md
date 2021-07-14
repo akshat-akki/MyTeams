@@ -20,6 +20,7 @@
 - Suports upto 30 participants in video call
 - Screen sharing
 - Chat in between the meet
+- Notifications for messages received
 - Customised share meet link using firebase dynamic links
 - Powered by Firebase Firestore, Realtime database 
 - Private and group messages 
