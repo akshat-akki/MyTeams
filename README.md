@@ -2,7 +2,7 @@
 ### Android application for group video calling and collaboration
 
 # How to use encryption decription
-### go to settings in the profile section of Teams chat and export the barcode of encrytion decryption
+### Go to settings in the profile section of Teams chat and export the barcode of encrytion decryption
 
 ## APK
 -APk [Download](https://drive.google.com/file/d/1JvDDEB4R5NE1sEn-ocl--zx76MWvC1XW/view?usp=sharing)
@@ -20,6 +20,7 @@
 
 ## Features
 - Google Authentication
+- import contacts from phonebook
 - Suports upto 30 participants in video call
 - Screen sharing
 - Chat in between the meet
