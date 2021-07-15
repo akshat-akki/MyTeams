@@ -1,6 +1,9 @@
 # MyTeams for Android 
 ### Android application for group video calling and collaboration
 
+# How to use encryption decription
+### go to settings in the profile section of Teams chat and export the barcode of encrytion decryption
+
 ## APK
 -APk [Download](https://drive.google.com/file/d/1JvDDEB4R5NE1sEn-ocl--zx76MWvC1XW/view?usp=sharing)
 
