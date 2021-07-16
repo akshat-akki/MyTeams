@@ -2,7 +2,7 @@
 ### Android application for group video calling and collaboration
 
 ## How to use end to end encryption (IMP)
-- Go to settings in the profile section of Teams chat and export the barcode of encrytion decryption
+- Go to settings in the profile section of Teams chat and export the QR code of encrytion decryption
 
 ## APK
 -APk [Download](https://drive.google.com/file/d/1JvDDEB4R5NE1sEn-ocl--zx76MWvC1XW/view?usp=sharing)
