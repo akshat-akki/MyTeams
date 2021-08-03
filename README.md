@@ -1,6 +1,9 @@
 # MyTeams for Android 
 ### Android application for group video calling and collaboration
 
+## Some modules such as audio message, last seen etc will not work after 7/8/2021
+-some of the paid modules may not work after 7th august as the validity of modules expires!!
+
 ## How to use end to end encryption (IMP)
 - Go to settings in the profile section of Teams chat and export the QR code of encrytion decryption
 
